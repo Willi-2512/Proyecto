@@ -18,7 +18,7 @@
             <a class="header_enlaces" href="about.html">Donaciones y Voluntariado</a>
             <a class="header_enlaces" href="mapa.html">Mapa Interactivo</a>
             <a class="header_enlaces" href="soporte.html">Contacto y Soporte</a>
-            <a class="header_enlaces" href="sesion.html">Iniciar sesion</a>
+            <a class="header_enlaces" href="sesion.html">Iniciar sesión</a>
         </nav>
     </header>
 
@@ -65,4 +65,53 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-   
+
+    <script>
+    document.getElementById('registroForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('nombre', document.getElementById('nombre').value);
+        formData.append('cedula', document.getElementById('cedula').value);
+        formData.append('telefono', document.getElementById('telefono').value);
+        formData.append('email', document.getElementById('email').value);
+        formData.append('direccion', document.getElementById('direccion').value);
+        formData.append('password', document.getElementById('password').value);
+
+        fetch('registrar_usuario.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            const mensajeElement = document.getElementById('mensaje');
+            mensajeElement.style.padding = '10px';
+            mensajeElement.style.marginTop = '10px';
+
+            if (data.success) {
+                mensajeElement.style.backgroundColor = '#d4edda';
+                mensajeElement.style.color = '#155724';
+                mensajeElement.innerText = data.message;
+                document.getElementById('registroForm').reset();
+
+                setTimeout(() => {
+                    window.location.href = 'sesion.html';
+                }, 2000);
+            } else {
+                mensajeElement.style.backgroundColor = '#f8d7da';
+                mensajeElement.style.color = '#721c24';
+                mensajeElement.innerText = data.message || 'Error al registrar usuario';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const mensajeElement = document.getElementById('mensaje');
+            mensajeElement.style.backgroundColor = '#f8d7da';
+            mensajeElement.style.color = '#721c24';
+            mensajeElement.style.padding = '10px';
+            mensajeElement.innerText = 'Error al registrar: No se pudo conectar al servidor';
+        });
+    });
+    </script>
+</body>
+</html>
