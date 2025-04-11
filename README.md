@@ -1,5 +1,5 @@
-# Proyecto
-Proyecto integrador 
+# Proyecto integrador
+ 
 ✨ Desarrollado por:
       - Ingeniero Andrés Hernández
       - Ingeniero Yilian Pérez
@@ -7,8 +7,10 @@ Proyecto integrador
 
 ¡Bienvenid@s a nuestro repositorio! 😄
 
-🌱 Objetivo del proyecto
+🎯 Objetivo del proyecto
 - Un proyecto que repare y restituya a las victimas de desastres naturales en las diferentes regiones de Colombia.
+
+  Estado del proyecto: 50%
 
 🔧 Tecnologías y herramientas que uso:
 - HTML / CSS / JavaScript
