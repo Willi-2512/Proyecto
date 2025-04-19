@@ -28,30 +28,30 @@
         </h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form id="registroForm" method="POST">
+                <form id="registroForm" method="POST" action="procesar_registro.php">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre completo</label>
-                        <input type="text" class="form-control" id="nombre" required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
                     </div>
                     <div class="mb-3">
                         <label for="cedula" class="form-label">Cédula</label>
-                        <input type="text" class="form-control" id="cedula" required>
+                        <input type="text" class="form-control" id="cedula" name="cedula" required>
                     </div>
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" class="form-control" id="telefono" required>
+                        <input type="tel" class="form-control" id="telefono" name="telefono" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo electrónico</label>
-                        <input type="email" class="form-control" id="email" required>
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="mb-3">
                         <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" required>
+                        <input type="text" class="form-control" id="direccion" name="direccion" required>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" required>
+                        <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Enviar</button>
                 </form>
@@ -68,7 +68,7 @@
 
     <script>
     document.getElementById('registroForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // Evita el envío predeterminado del formulario
 
         const formData = new FormData();
         formData.append('nombre', document.getElementById('nombre').value);
@@ -78,11 +78,16 @@
         formData.append('direccion', document.getElementById('direccion').value);
         formData.append('password', document.getElementById('password').value);
 
-        fetch('registrar_usuario.php', {
+        fetch('procesar_registro.php', { // Asegúrate de que esta URL sea correcta
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
         .then(data => {
             const mensajeElement = document.getElementById('mensaje');
             mensajeElement.style.padding = '10px';
