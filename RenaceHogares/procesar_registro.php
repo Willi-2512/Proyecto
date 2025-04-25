@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password_db = ""; // Cambiar si tienes una contraseña configurada
+$password_db = "12345"; // Cambiar si tienes una contraseña configurada
 $dbname = "proyecto2025h";
 
 $conn = new mysqli($servername, $username, $password_db, $dbname);
