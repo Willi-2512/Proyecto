@@ -27,7 +27,40 @@
         </h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form id="registroForm" method="POST" action="procesar_registro.php">
+                <?php
+                $mensaje = "";
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    // Conexión a la base de datos
+                    $conn = new mysqli("localhost", "root", "", "proyecto2025h");
+                    if ($conn->connect_error) {
+                        $mensaje = '<div style="background:#f8d7da;color:#721c24;padding:10px;">Error de conexión: ' . $conn->connect_error . '</div>';
+                    } else {
+                        // Sanitizar entradas
+                        $nombre = $conn->real_escape_string($_POST['nombre']);
+                        $cedula = $conn->real_escape_string($_POST['cedula']);
+                        $telefono = $conn->real_escape_string($_POST['telefono']);
+                        $email = $conn->real_escape_string($_POST['email']);
+                        $direccion = $conn->real_escape_string($_POST['direccion']);
+                        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+                        // Insertar en la base de datos
+                        $sql = "INSERT INTO usuarios (nombre, cedula, telefono, email, direccion, password) VALUES ('$nombre', '$cedula', '$telefono', '$email', '$direccion', '$password')";
+                        if ($conn->query($sql) === TRUE) {
+                            $mensaje = '<div style="background:#d4edda;color:#155724;padding:10px;">Registro exitoso. Redirigiendo a inicio de sesión...</div>';
+                            echo "<script>setTimeout(function(){ window.location.href = 'sesion.html'; }, 2000);</script>";
+                        } else {
+                            if ($conn->errno == 1062) {
+                                $mensaje = '<div style="background:#f8d7da;color:#721c24;padding:10px;">El correo ya está registrado.</div>';
+                            } else {
+                                $mensaje = '<div style="background:#f8d7da;color:#721c24;padding:10px;">Error al registrar: ' . $conn->error . '</div>';
+                            }
+                        }
+                        $conn->close();
+                    }
+                }
+                if ($mensaje) echo $mensaje;
+                ?>
+                <form id="registroForm" method="POST" action="">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre completo</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
@@ -54,7 +87,6 @@
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Enviar</button>
                 </form>
-                <div id="mensaje" class="mt-3"></div> 
             </div>
         </div>
     </main>
@@ -64,58 +96,5 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-    <script>
-    document.getElementById('registroForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Evita el envío predeterminado del formulario
-
-        const formData = new FormData();
-        formData.append('nombre', document.getElementById('nombre').value);
-        formData.append('cedula', document.getElementById('cedula').value);
-        formData.append('telefono', document.getElementById('telefono').value);
-        formData.append('email', document.getElementById('email').value);
-        formData.append('direccion', document.getElementById('direccion').value);
-        formData.append('password', document.getElementById('password').value);
-
-        fetch('procesar_registro.php', { // Asegúrate de que esta URL sea correcta
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const mensajeElement = document.getElementById('mensaje');
-            mensajeElement.style.padding = '10px';
-            mensajeElement.style.marginTop = '10px';
-
-            if (data.success) {
-                mensajeElement.style.backgroundColor = '#d4edda';
-                mensajeElement.style.color = '#155724';
-                mensajeElement.innerText = data.message;
-                document.getElementById('registroForm').reset();
-
-                setTimeout(() => {
-                    window.location.href = 'sesion.html';
-                }, 2000);
-            } else {
-                mensajeElement.style.backgroundColor = '#f8d7da';
-                mensajeElement.style.color = '#721c24';
-                mensajeElement.innerText = data.message || 'Error al registrar usuario';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            const mensajeElement = document.getElementById('mensaje');
-            mensajeElement.style.backgroundColor = '#f8d7da';
-            mensajeElement.style.color = '#721c24';
-            mensajeElement.style.padding = '10px';
-            mensajeElement.innerText = 'Error al registrar: No se pudo conectar al servidor';
-        });
-    });
-    </script>
 </body>
 </html>
