@@ -1,30 +1,114 @@
 {
   "database": "proyecto2025h",
-  "collection": "usuarios",
-  "documents": [
+  "collections": [
     {
-      "nombre": "Juan Pérez",
-      "cedula": "1234567890",
-      "telefono": "+1234567890",
-      "email": "juan@example.com",
-      "direccion": "Calle Falsa 123",
-      "password": "hashed_password_example",  // Asegúrate de usar un hash real para las contraseñas
-      "fecha_registro": { "$date": "2025-04-30T00:00:00Z" }
+      "name": "usuarios",
+      "documents": [
+        {
+          "nombre": "Juan Pérez",
+          "cedula": "1234567890",
+          "telefono": "+1234567890",
+          "email": "juan@example.com",
+          "password": "hashed_password_example",  // Asegúrate de usar un hash real para las contraseñas
+          "fecha_registro": { "$date": "2025-04-30T00:00:00Z" },
+          "direcciones": [
+            {
+              "direccion_id": "dir123",
+              "direccion": "Calle Falsa 123",
+              "ciudad": "Ciudad X",
+              "pais": "Pais Y"
+            }
+          ]
+        },
+        {
+          "nombre": "María López",
+          "cedula": "0987654321",
+          "telefono": "+0987654321",
+          "email": "maria@example.com",
+          "password": "hashed_password_example",  // Asegúrate de usar un hash real para las contraseñas
+          "fecha_registro": { "$date": "2025-04-29T00:00:00Z" },
+          "direcciones": [
+            {
+              "direccion_id": "dir124",
+              "direccion": "Avenida Siempre Viva 456",
+              "ciudad": "Ciudad Z",
+              "pais": "Pais W"
+            }
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "key": { "email": 1 },
+          "unique": true
+        },
+        {
+          "key": { "cedula": 1 },
+          "unique": true
+        }
+      ]
     },
     {
-      "nombre": "María López",
-      "cedula": "0987654321",
-      "telefono": "+0987654321",
-      "email": "maria@example.com",
-      "direccion": "Avenida Siempre Viva 456",
-      "password": "hashed_password_example",  // Asegúrate de usar un hash real para las contraseñas
-      "fecha_registro": { "$date": "2025-04-29T00:00:00Z" }
-    }
-  ],
-  "indexes": [
+      "name": "solicitudes",
+      "documents": [
+        {
+          "solicitud_id": "sol123",
+          "cedula_usuario": "1234567890",
+          "tipo_solicitud": "Cambio de dirección",
+          "descripcion": "Solicito cambio de dirección para mi cuenta.",
+          "fecha_solicitud": { "$date": "2025-04-30T12:00:00Z" },
+          "estado": "Pendiente"
+        },
+        {
+          "solicitud_id": "sol124",
+          "cedula_usuario": "0987654321",
+          "tipo_solicitud": "Soporte técnico",
+          "descripcion": "Tengo problemas con mi cuenta de usuario.",
+          "fecha_solicitud": { "$date": "2025-04-29T14:00:00Z" },
+          "estado": "Resuelto"
+        }
+      ],
+      "indexes": [
+        {
+          "key": { "cedula_usuario": 1 },
+          "unique": false
+        },
+        {
+          "key": { "estado": 1 },
+          "unique": false
+        }
+      ]
+    },
     {
-      "key": { "email": 1 },
-      "unique": true
+      "name": "direcciones",
+      "documents": [
+        {
+          "direccion_id": "dir123",
+          "cedula_usuario": "1234567890",
+          "direccion": "Calle Falsa 123",
+          "ciudad": "Ciudad X",
+          "pais": "Pais Y",
+          "fecha_registro": { "$date": "2025-04-30T00:00:00Z" }
+        },
+        {
+          "direccion_id": "dir124",
+          "cedula_usuario": "0987654321",
+          "direccion": "Avenida Siempre Viva 456",
+          "ciudad": "Ciudad Z",
+          "pais": "Pais W",
+          "fecha_registro": { "$date": "2025-04-29T00:00:00Z" }
+        }
+      ],
+      "indexes": [
+        {
+          "key": { "cedula_usuario": 1 },
+          "unique": false
+        },
+        {
+          "key": { "direccion_id": 1 },
+          "unique": true
+        }
+      ]
     }
   ]
 }
