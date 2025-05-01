@@ -6,33 +6,29 @@
       "documents": [
         {
           "nombre": "Juan Pérez",
-          "cedula": "1234567890",
-          "telefono": "+1234567890",
-          "email": "juan@example.com",
-          "password": "hashed_password_example",  // Asegúrate de usar un hash real para las contraseñas
+          "cedula": "123456789",
+          "telefono": "123456789",
+          "email": "juan@gmail.com",
+          "password": "Hola",  
           "fecha_registro": { "$date": "2025-04-30T00:00:00Z" },
           "direcciones": [
             {
-              "direccion_id": "dir123",
-              "direccion": "Calle Falsa 123",
-              "ciudad": "Ciudad X",
-              "pais": "Pais Y"
+              "direccion": "Calle 12",
+              "ciudad": "Bogota","
             }
           ]
         },
         {
           "nombre": "María López",
-          "cedula": "0987654321",
-          "telefono": "+0987654321",
-          "email": "maria@example.com",
-          "password": "hashed_password_example",  // Asegúrate de usar un hash real para las contraseñas
+          "cedula": "123456789",
+          "telefono": "+123456789",
+          "email": "maria@gmail.com",
+          "password": "Hola",  
           "fecha_registro": { "$date": "2025-04-29T00:00:00Z" },
           "direcciones": [
             {
-              "direccion_id": "dir124",
-              "direccion": "Avenida Siempre Viva 456",
-              "ciudad": "Ciudad Z",
-              "pais": "Pais W"
+              "direccion": "Carrera 12",
+              "ciudad": "Medellin",
             }
           ]
         }
@@ -83,19 +79,15 @@
       "name": "direcciones",
       "documents": [
         {
-          "direccion_id": "dir123",
           "cedula_usuario": "1234567890",
-          "direccion": "Calle Falsa 123",
-          "ciudad": "Ciudad X",
-          "pais": "Pais Y",
+          "direccion": "Calle 12",
+          "ciudad": "Bogota",
           "fecha_registro": { "$date": "2025-04-30T00:00:00Z" }
         },
         {
-          "direccion_id": "dir124",
-          "cedula_usuario": "0987654321",
-          "direccion": "Avenida Siempre Viva 456",
-          "ciudad": "Ciudad Z",
-          "pais": "Pais W",
+          "cedula_usuario": "123456789",
+          "direccion": "Carrera 12",
+          "ciudad": "Medellin",
           "fecha_registro": { "$date": "2025-04-29T00:00:00Z" }
         }
       ],
