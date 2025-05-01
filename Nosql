@@ -1,0 +1,30 @@
+{
+  "database": "proyecto2025h",
+  "collection": "usuarios",
+  "documents": [
+    {
+      "nombre": "Juan Pérez",
+      "cedula": "1234567890",
+      "telefono": "+1234567890",
+      "email": "juan@example.com",
+      "direccion": "Calle Falsa 123",
+      "password": "hashed_password_example",  // Asegúrate de usar un hash real para las contraseñas
+      "fecha_registro": { "$date": "2025-04-30T00:00:00Z" }
+    },
+    {
+      "nombre": "María López",
+      "cedula": "0987654321",
+      "telefono": "+0987654321",
+      "email": "maria@example.com",
+      "direccion": "Avenida Siempre Viva 456",
+      "password": "hashed_password_example",  // Asegúrate de usar un hash real para las contraseñas
+      "fecha_registro": { "$date": "2025-04-29T00:00:00Z" }
+    }
+  ],
+  "indexes": [
+    {
+      "key": { "email": 1 },
+      "unique": true
+    }
+  ]
+}
