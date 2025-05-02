@@ -12,16 +12,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = $conn->real_escape_string($_POST['email']);
         $direccion = $conn->real_escape_string($_POST['direccion']);
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $rol = $conn->real_escape_string($_POST['rol']);
 
-        $sql = "INSERT INTO usuarios (nombre, cedula, telefono, email, direccion, password) VALUES ('$nombre', '$cedula', '$telefono', '$email', '$direccion', '$password')";
-        if ($conn->query($sql) === TRUE) {
-            $mensaje = '<div style="background:#d4edda;color:#155724;padding:10px;">Registro exitoso. Redirigiendo a inicio de sesión...</div>';
-            echo "<script>setTimeout(function(){ window.location.href = 'sesion.php'; }, 2000);</script>";
+        // Bloquear registro si el rol es distinto de 'usuario'
+        if ($rol !== 'usuario') {
+            $mensaje = '<div style="background:#f8d7da;color:#721c24;padding:10px;">No puede registrarse como administrador. Contacte al encargado de la página.</div>';
         } else {
-            if ($conn->errno == 1062) {
+            // Verificar si el correo ya existe antes de intentar registrar
+            $sql_check = "SELECT id FROM usuarios WHERE email='$email' LIMIT 1";
+            $result_check = $conn->query($sql_check);
+            if ($result_check && $result_check->num_rows > 0) {
                 $mensaje = '<div style="background:#f8d7da;color:#721c24;padding:10px;">El correo ya está registrado.</div>';
             } else {
-                $mensaje = '<div style="background:#f8d7da;color:#721c24;padding:10px;">Error al registrar: ' . $conn->error . '</div>';
+                $sql = "INSERT INTO usuarios (nombre, cedula, telefono, email, direccion, password, rol) VALUES ('$nombre', '$cedula', '$telefono', '$email', '$direccion', '$password', '$rol')";
+                if ($conn->query($sql) === TRUE) {
+                    $mensaje = '<div style="background:#d4edda;color:#155724;padding:10px;">Registro exitoso. Redirigiendo a inicio de sesión...</div>';
+                    echo "<script>setTimeout(function(){ window.location.href = 'sesion.php'; }, 2000);</script>";
+                } else {
+                    $mensaje = '<div style="background:#f8d7da;color:#721c24;padding:10px;">Error al registrar: ' . $conn->error . '</div>';
+                }
             }
         }
         $conn->close();
@@ -81,6 +90,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="password" class="form-label">Contraseña</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="rol" class="form-label">Rol</label>
+                        <select name="rol" id="rol" class="form-select" required>
+                            <option value="usuario" selected>Usuario</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                        <div id="rolAdvertencia" class="text-danger mt-2" style="display:none;">
+                            Para solicitar el rol de administrador debe contactar con el encargado de la página.
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary w-100">Enviar</button>
                 </form>
             </div>
@@ -90,5 +109,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Desarrollado por GrupoHogares</p>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+    document.getElementById('rol').addEventListener('change', function() {
+        const advertencia = document.getElementById('rolAdvertencia');
+        if (this.value !== 'usuario') {
+            advertencia.style.display = 'block';
+        } else {
+            advertencia.style.display = 'none';
+        }
+    });
+    document.getElementById('registroForm').addEventListener('submit', function(e) {
+        const rol = document.getElementById('rol').value;
+        if (rol !== 'usuario') {
+            e.preventDefault();
+            document.getElementById('rolAdvertencia').style.display = 'block';
+            alert('No puede registrarse como administrador. Contacte al encargado de la página.');
+        }
+    });
+    </script>
 </body>
 </html>

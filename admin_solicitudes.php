@@ -104,4 +104,28 @@ Implementación en el proyecto:
   - Registrar la fecha de cambio de estado de cada solicitud.
   - Calcular el tiempo de atención y mostrar alertas si se superan los límites definidos en el SLA.
 
-Fin de la documentación.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+?>echo "</div>";}    echo " | % Cumplimiento SLA (<=48h): $porc_sla%";    $porc_sla = round($sla['dentro_sla'] / $atendidas * 100, 2);    $sla = $res2->fetch_assoc();    $res2 = $conn->query("SELECT COUNT(*) as dentro_sla FROM solicitudes WHERE fecha_atencion IS NOT NULL AND TIMESTAMPDIFF(HOUR, fecha_solicitud, fecha_atencion) <= 48");if ($atendidas > 0) {echo "<b>KPI:</b> Solicitudes totales: $total | Atendidas: $atendidas | Completadas: $completadas | Tiempo promedio de atención: $tiempo_promedio horas";echo "<div class='alert alert-info'>";$tiempo_promedio = round($kpi['tiempo_promedio'], 2);$completadas = $kpi['completadas'];$atendidas = $kpi['atendidas'];$total = $kpi['total'];$kpi = $res->fetch_assoc();    FROM solicitudes");    AVG(TIMESTAMPDIFF(HOUR, fecha_solicitud, fecha_atencion)) as tiempo_promedio    SUM(CASE WHEN fecha_cierre IS NOT NULL THEN 1 ELSE 0 END) as completadas,    SUM(CASE WHEN fecha_atencion IS NOT NULL THEN 1 ELSE 0 END) as atendidas,$res = $conn->query("SELECT COUNT(*) as total, // KPIs<?phpFin de la documentación.

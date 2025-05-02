@@ -34,7 +34,9 @@ CREATE TABLE `solicitudes` (
   `descripcion` text NOT NULL,
   `fecha_solicitud` timestamp NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(30) NOT NULL DEFAULT 'En espera',
-  `observacion` text DEFAULT NULL
+  `observacion` text DEFAULT NULL,
+  `fecha_atencion` datetime DEFAULT NULL,
+  `fecha_cierre` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
