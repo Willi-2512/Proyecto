@@ -16,10 +16,17 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
     <header class="header">
         <nav class="header_menu d-flex justify-content-center align-items-center position-relative">
             <a class="header_enlaces mx-3" href="index.php">Inicio</a>
-            <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
+            <?php if ($usuario_nombre): ?>
+                <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
+            <?php endif; ?>
             <a class="header_enlaces mx-3" href="mapa.php">Mapa Interactivo</a>
             <a class="header_enlaces mx-3" href="soporte.php">Contacto y Soporte</a>
-            <a class="header_enlaces mx-3" href="sesion.php">Iniciar sesión</a>
+            <?php if ($usuario_nombre): ?>
+                <a class="header_enlaces mx-3" href="informacion.php">Información</a>
+                <a class="header_enlaces mx-3" href="logout.php">Cerrar sesión</a>
+            <?php else: ?>
+                <a class="header_enlaces mx-3" href="sesion.php">Iniciar sesión</a>
+            <?php endif; ?>
             <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
             <?php if ($usuario_nombre): ?>
                 <span class="fw-bold text-primary position-absolute end-0 me-4">

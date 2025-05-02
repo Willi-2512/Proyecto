@@ -3,11 +3,10 @@ session_start();
 $mensaje = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Conexión a la base de datos (ajusta los datos de conexión)
     $host = "localhost";
     $usuario = "root";
     $clave = "";
-    $bd = "proyecto2025h"; // Cambia aquí el nombre de la base de datos
+    $bd = "proyecto2025h";
 
     $conn = new mysqli($host, $usuario, $clave, $bd);
 
@@ -18,7 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $conn->real_escape_string($_POST['email']);
     $password = $_POST['password'];
 
-    // Verificar si el usuario existe
     $sql = "SELECT id, nombre, password FROM usuarios WHERE email='$email' LIMIT 1";
     $result = $conn->query($sql);
 
@@ -50,13 +48,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <header class="header">
-        <nav class="header_menu d-flex justify-content-center">
-            <a class="header_enlaces mx-3" href="index.html">Inicio</a>
-            <a class="header_enlaces mx-3" href="solicitud.html">Solicitud</a>
-            <a class="header_enlaces mx-3" href="mapa.html">Mapa Interactivo</a>
-            <a class="header_enlaces mx-3" href="soporte.html">Contacto y Soporte</a>
-            <a class="header_enlaces mx-3" href="sesion.php">Iniciar sesión</a>
-            <a class="header_enlaces mx-3" href="condiciones.html">Terminos y condiciones</a>
+        <nav class="header_menu d-flex justify-content-center align-items-center position-relative">
+            <a class="header_enlaces mx-3" href="index.php">Inicio</a>
+            <?php if (isset($_SESSION['usuario_nombre'])): ?>
+                <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
+            <?php endif; ?>
+            <a class="header_enlaces mx-3" href="mapa.php">Mapa Interactivo</a>
+            <a class="header_enlaces mx-3" href="soporte.php">Contacto y Soporte</a>
+            <?php if (isset($_SESSION['usuario_nombre'])): ?>
+                <a class="header_enlaces mx-3" href="informacion.php">Información</a>
+                <a class="header_enlaces mx-3" href="logout.php">Cerrar sesión</a>
+            <?php else: ?>
+                <a class="header_enlaces mx-3" href="sesion.php">Iniciar sesión</a>
+            <?php endif; ?>
+            <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
+            <?php if (isset($_SESSION['usuario_nombre'])): ?>
+                <span class="fw-bold text-primary position-absolute end-0 me-4">
+                    <?php echo htmlspecialchars($_SESSION['usuario_nombre']); ?>
+                </span>
+            <?php endif; ?>
         </nav>
     </header>
 
@@ -80,6 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="mt-3">
                     <a class="botones_estilo w-100" href="registro.php">¿No te has registrado?</a> 
                 </div>
+                <?php if ($mensaje): ?>
+                    <div class="alert alert-danger mt-3"><?php echo $mensaje; ?></div>
+                <?php endif; ?>
             </div>
         </div>
     </main>
@@ -87,24 +100,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <footer class="footer">
         <p>Desarrollado por GrupoHogares</p>
     </footer>
-
-    <!-- Modal de mensaje -->
-    <div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="mensajeModalLabel">Aviso</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-          </div>
-          <div class="modal-body">
-            <?php if ($mensaje) echo $mensaje; ?>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
