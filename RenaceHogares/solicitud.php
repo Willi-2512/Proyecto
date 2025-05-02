@@ -1,6 +1,47 @@
 <?php
 session_start();
 $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre'] : null;
+$usuario_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : null;
+$mensaje = "";
+
+if (!$usuario_id) {
+    header("Location: sesion.php");
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $tipo = trim($_POST['tipo_solicitud']);
+    $descripcion = trim($_POST['descripcion']);
+
+    $conn = new mysqli("localhost", "root", "", "proyecto2025h");
+    if ($conn->connect_error) {
+        $mensaje = '<div class="alert alert-danger">Error de conexión: ' . $conn->connect_error . '</div>';
+    } else {
+        $tipo = $conn->real_escape_string($tipo);
+        $descripcion = $conn->real_escape_string($descripcion);
+        $sql = "INSERT INTO solicitudes (usuario_id, tipo_solicitud, descripcion, fecha_solicitud) VALUES ($usuario_id, '$tipo', '$descripcion', NOW())";
+        if ($conn->query($sql) === TRUE) {
+            $mensaje = '<div class="alert alert-success">¡Solicitud enviada correctamente!</div>';
+        } else {
+            $mensaje = '<div class="alert alert-danger">Error al enviar la solicitud: ' . $conn->error . '</div>';
+        }
+        $conn->close();
+    }
+}
+
+// Obtener solicitudes del usuario con estado
+$solicitudes = [];
+$conn = new mysqli("localhost", "root", "", "proyecto2025h");
+if (!$conn->connect_error) {
+    $sql = "SELECT tipo_solicitud, descripcion, fecha_solicitud, estado FROM solicitudes WHERE usuario_id = $usuario_id ORDER BY fecha_solicitud DESC";
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $solicitudes[] = $row;
+        }
+    }
+    $conn->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es-mx">
@@ -8,42 +49,26 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
     <meta charset="UTF-8"> 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portafolio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Crear Solicitud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .boton-flotante {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 50%;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            z-index: 1000; 
-        }
-
-        .boton-flotante img {
-            width: 30px;
-            height: 30px;
-        }
-
-        .boton-flotante:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
     <header class="header">
         <nav class="header_menu d-flex justify-content-center align-items-center position-relative">
             <a class="header_enlaces mx-3" href="index.php">Inicio</a>
-            <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
+            <?php if ($usuario_nombre): ?>
+                <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
+            <?php endif; ?>
             <a class="header_enlaces mx-3" href="mapa.php">Mapa Interactivo</a>
             <a class="header_enlaces mx-3" href="soporte.php">Contacto y Soporte</a>
-            <a class="header_enlaces mx-3" href="sesion.php">Iniciar sesión</a>
+            <a class="header_enlaces mx-3" href="informacion.php">Información</a>
             <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
+            <?php if ($usuario_nombre): ?>
+                <a class="header_enlaces mx-3" href="logout.php">Cerrar sesión</a>
+            <?php else: ?>
+                <a class="header_enlaces mx-3" href="sesion.php">Iniciar sesión</a>
+            <?php endif; ?>
             <?php if ($usuario_nombre): ?>
                 <span class="fw-bold text-primary position-absolute end-0 me-4">
                     <?php echo htmlspecialchars($usuario_nombre); ?>
@@ -52,77 +77,93 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
         </nav>
     </header>
 
-    <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img class="d-block w-100" src="imagenes/mathieu-stern-tv7GF92ZWvs-unsplash.jpg" alt="First slide">
-            </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" src="imagenes/milivoj-kuhar-Te48TPzdcU8-unsplash.jpg" alt="Second slide">
-            </div>
-            <div class="carousel-item">
-                <img class="d-block w-100" src="imagenes/tierra-mallorca-rgJ1J8SDEAY-unsplash.jpg" alt="Third slide">
+    <main class="container mt-4">
+        <h1 class="presentacion_titulo text-center">
+            <strong class="titulo-resaltado">Crear Solicitud de Ayuda</strong>
+        </h1>
+        <!-- Mensaje de tiempos de espera y estados -->
+        <div class="alert alert-info text-center mb-4">
+            <strong>Importante:</strong> Al enviar tu solicitud, será atendida en el menor tiempo posible. El tiempo de respuesta puede variar según la demanda y la prioridad de los casos.<br>
+            <strong>Estados de tu solicitud:</strong>
+            <ul class="mb-0" style="display:inline-block;text-align:left;">
+                <li><span class="badge bg-warning text-dark">En espera</span>: Tu solicitud fue recibida y está pendiente de revisión.</li>
+                <li><span class="badge bg-primary">En proceso</span>: Tu solicitud está siendo atendida por nuestro equipo.</li>
+                <li><span class="badge bg-success">Completada</span>: Tu solicitud ha sido resuelta.</li>
+            </ul>
+            ¡Gracias por tu paciencia!
+        </div>
+        <?php if ($mensaje) echo $mensaje; ?>
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <form method="POST" action="">
+                    <div class="mb-3">
+                        <label for="tipo_solicitud" class="form-label">Tipo de Solicitud</label>
+                        <select class="form-select" id="tipo_solicitud" name="tipo_solicitud" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Reparación de vivienda">Reparación de vivienda</option>
+                            <option value="Asistencia alimentaria">Asistencia alimentaria</option>
+                            <option value="Apoyo psicológico">Apoyo psicológico</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Enviar Solicitud</button>
+                </form>
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
 
-    <main class="presentacion"> 
-        <section class="presentacion_contenido">
-            <h1 class="presentacion_titulo">
-                <strong class="titulo-resaltado">Juntos Reconstruimos lo que el Desastre se Llevó
-                </strong>
-            </h1>
-            <p class="presentacion_parrafo">En momentos difíciles, la solidaridad y el apoyo son nuestra mayor fortaleza. 
-                Esta plataforma está diseñada para ayudarte a recuperar tu hogar y tu vida después de un desastre natural.
-                Aquí encontrarás recursos, asistencia y una comunidad que te acompañará en cada paso hacia
-                la rehabilitación.
-            </p>
-            <div class="botones">
-                <a class="botones_estilo" href="https://instagram.com/">
-                    <img src="imagenes/boton-de-informacion.png" width="20px" height="20px">Más Información
-                </a>
-            </div>
-        </section>
-
-        <div class="container text-center">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h1 class="presentacion_titulo">
-                        <strong class="titulo-resaltado">Tu Hogar, Nuestra Prioridad
-                        </strong>
-                    </h1>
-                    <p class="parrafo1">"Sabemos que tu vivienda es más que un espacio; es tu refugio y tu tranquilidad. 
-                        Por eso, ofrecemos herramientas y recursos para que puedas rehabilitar tu hogar
-                        de manera segura y eficiente. No estás solo, estamos aquí para ayudarte."
-                    </p>
-                </div>
-                <div class="col">
-                    <img class="d-block w-100" src="imagenes/familia-feliz-perro-mudandose-nuevo-hogar_23-2149749178.avif" alt="imagen familia feliz">
-                </div>
+        <!-- Apartado para ver solicitudes del usuario con estado -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-10">
+                <h2 class="presentacion_titulo text-center mb-3"><strong class="titulo-resaltado">Mis Solicitudes</strong></h2>
+                <?php if (count($solicitudes) > 0): ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Tipo de Solicitud</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($solicitudes as $sol): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($sol['tipo_solicitud']); ?></td>
+                                        <td><?php echo htmlspecialchars($sol['descripcion']); ?></td>
+                                        <td><?php echo htmlspecialchars($sol['fecha_solicitud']); ?></td>
+                                        <td>
+                                            <?php
+                                            $estado = strtolower($sol['estado']);
+                                            if ($estado == 'en espera') {
+                                                echo '<span class="badge bg-warning text-dark">En espera</span>';
+                                            } elseif ($estado == 'en proceso') {
+                                                echo '<span class="badge bg-primary">En proceso</span>';
+                                            } elseif ($estado == 'completada' || $estado == 'completado') {
+                                                echo '<span class="badge bg-success">Completada</span>';
+                                            } else {
+                                                echo '<span class="badge bg-secondary">'.htmlspecialchars($sol['estado']).'</span>';
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-info text-center">No tienes solicitudes registradas.</div>
+                <?php endif; ?>
             </div>
         </div>
-     
     </main>
-
-    <footer class="footer">
+    <footer class="footer mt-5">
         <p>Desarrollado por GrupoHogares</p>
     </footer>
-
-    <!-- Botón flotante de mensaje -->
-    <a href="https://docs.google.com/forms/d/1cMO0dX7vkM-kzsmDY4AarqnToxqJpTYEr7XKo67hmWo/edit?usp=drive_web" target="_blank">
-        <button class="boton-flotante">
-            <img src="imagenes/mensaje.png" alt="Encuesta de satisfaccion">
-        </button>
-    </a>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
