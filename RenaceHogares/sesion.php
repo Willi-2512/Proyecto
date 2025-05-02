@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $conn->real_escape_string($_POST['email']);
     $password = $_POST['password'];
 
-    $sql = "SELECT id, nombre, password FROM usuarios WHERE email='$email' LIMIT 1";
+    $sql = "SELECT id, nombre, password, rol FROM usuarios WHERE email='$email' LIMIT 1";
     $result = $conn->query($sql);
 
     if ($result && $result->num_rows === 1) {
@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $row['password'])) {
             $_SESSION['usuario_id'] = $row['id'];
             $_SESSION['usuario_nombre'] = $row['nombre'];
+            $_SESSION['usuario_rol'] = $row['rol'];
             header("Location: index.php");
             exit();
         } else {

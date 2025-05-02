@@ -19,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $tipo = $conn->real_escape_string($tipo);
         $descripcion = $conn->real_escape_string($descripcion);
+        // El estado por defecto es 'En espera' (por la base de datos)
         $sql = "INSERT INTO solicitudes (usuario_id, tipo_solicitud, descripcion, fecha_solicitud) VALUES ($usuario_id, '$tipo', '$descripcion', NOW())";
         if ($conn->query($sql) === TRUE) {
             $mensaje = '<div class="alert alert-success">¡Solicitud enviada correctamente!</div>';
@@ -128,30 +129,45 @@ if (!$conn->connect_error) {
                                     <th>Descripción</th>
                                     <th>Fecha</th>
                                     <th>Estado</th>
+                                    <th>Observación</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($solicitudes as $sol): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($sol['tipo_solicitud']); ?></td>
-                                        <td><?php echo htmlspecialchars($sol['descripcion']); ?></td>
-                                        <td><?php echo htmlspecialchars($sol['fecha_solicitud']); ?></td>
-                                        <td>
-                                            <?php
-                                            $estado = strtolower($sol['estado']);
-                                            if ($estado == 'en espera') {
-                                                echo '<span class="badge bg-warning text-dark">En espera</span>';
-                                            } elseif ($estado == 'en proceso') {
-                                                echo '<span class="badge bg-primary">En proceso</span>';
-                                            } elseif ($estado == 'completada' || $estado == 'completado') {
-                                                echo '<span class="badge bg-success">Completada</span>';
-                                            } else {
-                                                echo '<span class="badge bg-secondary">'.htmlspecialchars($sol['estado']).'</span>';
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                <?php
+                                // Obtener también la observación de cada solicitud
+                                $conn = new mysqli("localhost", "root", "", "proyecto2025h");
+                                foreach ($solicitudes as $sol) {
+                                    $observacion = '';
+                                    if ($conn && !$conn->connect_error) {
+                                        $id = isset($sol['id']) ? intval($sol['id']) : 0;
+                                        $sqlObs = "SELECT observacion FROM solicitudes WHERE usuario_id = $usuario_id AND fecha_solicitud = '" . $conn->real_escape_string($sol['fecha_solicitud']) . "' LIMIT 1";
+                                        $resObs = $conn->query($sqlObs);
+                                        if ($resObs && $rowObs = $resObs->fetch_assoc()) {
+                                            $observacion = $rowObs['observacion'];
+                                        }
+                                    }
+                                ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($sol['tipo_solicitud']); ?></td>
+                                    <td><?php echo htmlspecialchars($sol['descripcion']); ?></td>
+                                    <td><?php echo htmlspecialchars($sol['fecha_solicitud']); ?></td>
+                                    <td>
+                                        <?php
+                                        $estado = strtolower($sol['estado']);
+                                        if ($estado == 'en espera') {
+                                            echo '<span class="badge bg-warning text-dark">En espera</span>';
+                                        } elseif ($estado == 'en proceso') {
+                                            echo '<span class="badge bg-primary">En proceso</span>';
+                                        } elseif ($estado == 'completada' || $estado == 'completado') {
+                                            echo '<span class="badge bg-success">Completada</span>';
+                                        } else {
+                                            echo '<span class="badge bg-secondary">'.htmlspecialchars($sol['estado']).'</span>';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($observacion); ?></td>
+                                </tr>
+                                <?php } if ($conn) $conn->close(); ?>
                             </tbody>
                         </table>
                     </div>

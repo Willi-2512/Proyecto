@@ -1,6 +1,7 @@
 <?php
 session_start();
 $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre'] : null;
+$usuario_rol = isset($_SESSION['usuario_rol']) ? $_SESSION['usuario_rol'] : null;
 ?>
 <!DOCTYPE html>
 <html lang="es-mx">
@@ -39,8 +40,11 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
     <header class="header">
         <nav class="header_menu d-flex justify-content-center align-items-center position-relative">
             <a class="header_enlaces mx-3" href="index.php">Inicio</a>
-            <?php if ($usuario_nombre): ?>
+            <?php if ($usuario_nombre && $usuario_rol !== 'admin'): ?>
                 <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
+            <?php endif; ?>
+            <?php if ($usuario_nombre && $usuario_rol === 'admin'): ?>
+                <a class="header_enlaces mx-3" href="admin_solicitudes.php">Panel Admin</a>
             <?php endif; ?>
             <a class="header_enlaces mx-3" href="mapa.php">Mapa Interactivo</a>
             <a class="header_enlaces mx-3" href="soporte.php">Contacto y Soporte</a>

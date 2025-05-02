@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-05-2025 a las 09:21:28
+-- Tiempo de generación: 02-05-2025 a las 21:17:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -33,17 +33,18 @@ CREATE TABLE `solicitudes` (
   `tipo_solicitud` varchar(100) NOT NULL,
   `descripcion` text NOT NULL,
   `fecha_solicitud` timestamp NOT NULL DEFAULT current_timestamp(),
-  `estado` varchar(30) NOT NULL DEFAULT 'En espera'
+  `estado` varchar(30) NOT NULL DEFAULT 'En espera',
+  `observacion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `solicitudes`
 --
 
-INSERT INTO `solicitudes` (`id`, `usuario_id`, `tipo_solicitud`, `descripcion`, `fecha_solicitud`, `estado`) VALUES
-(1, 8, 'Reparación de vivienda', 'ayuda me paso esto ,esto y esto', '2025-05-02 06:47:47', 'En proceso'),
-(2, 8, 'Reparación de vivienda', 'ayuda me paso esto ,esto y esto', '2025-05-02 06:49:05', 'En espera'),
-(3, 9, 'Reparación de vivienda', 'me paso esto aquello y lo otro', '2025-05-02 07:00:15', 'En espera');
+INSERT INTO `solicitudes` (`id`, `usuario_id`, `tipo_solicitud`, `descripcion`, `fecha_solicitud`, `estado`, `observacion`) VALUES
+(1, 9, 'Reparación de vivienda', 'me paso esto aquello y lo otro', '2025-05-02 07:00:15', 'En espera', NULL),
+(2, 8, 'Reparación de vivienda', 'prueba 2025 ayuda', '2025-05-02 19:01:38', 'En proceso', 'tu caso ya esta en proceso , pronto se te dara la respuesta final '),
+(3, 8, 'Apoyo psicológico', 'prrueba 2', '2025-05-02 19:14:48', 'En espera', NULL);
 
 -- --------------------------------------------------------
 
@@ -59,16 +60,18 @@ CREATE TABLE `usuarios` (
   `email` varchar(100) NOT NULL,
   `direccion` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
+  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
+  `rol` enum('usuario','admin') NOT NULL DEFAULT 'usuario'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`, `cedula`, `telefono`, `email`, `direccion`, `password`, `fecha_registro`) VALUES
-(8, 'prueba', '12323432342', '4433423443', 'prueba@a.com', 'Calle633sur#93a90', '$2y$10$RUn5u8GbW0Jf5r7H16sCVOHm.x8sVCZRC93uCXGJzcFIzag1Gb9sK', '2025-05-02 05:48:46'),
-(9, 'prueba', '1055779955', '3003211225', 'datos1@a.com', 'calle 25 a sur', '$2y$10$.JsuZTUguSeTPoS/WigTVubOQOFfYSo7PXpRj7UgW/ESVGgfRWy3m', '2025-05-02 06:59:31');
+INSERT INTO `usuarios` (`id`, `nombre`, `cedula`, `telefono`, `email`, `direccion`, `password`, `fecha_registro`, `rol`) VALUES
+(8, 'prueba', '12323432342', '4433423443', 'prueba@a.com', 'Calle633sur#93a90', '$2y$10$RUn5u8GbW0Jf5r7H16sCVOHm.x8sVCZRC93uCXGJzcFIzag1Gb9sK', '2025-05-02 05:48:46', 'usuario'),
+(9, 'prueba', '1055779955', '3003211225', 'datos1@a.com', 'calle 25 a sur', '$2y$10$.JsuZTUguSeTPoS/WigTVubOQOFfYSo7PXpRj7UgW/ESVGgfRWy3m', '2025-05-02 06:59:31', 'usuario'),
+(13, 'Administrador', '123456789', '3000000000', 'admin@admin.com', 'Oficina', '$2y$10$EDQDgcte2FcGfRh333C0/umZl6esRMT0Tsq3FcH5DJZ7RCRGJw96q', '2025-05-02 17:59:11', 'admin');
 
 --
 -- Índices para tablas volcadas
@@ -102,7 +105,7 @@ ALTER TABLE `solicitudes`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Restricciones para tablas volcadas
