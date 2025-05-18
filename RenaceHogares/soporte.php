@@ -19,9 +19,9 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
         }
         .header_menu {
             display: flex;
-            justify-content: flex-start; /* Cambié esta propiedad para mover el menú a la izquierda */
+            justify-content: flex-start; 
             align-items: center;
-            width: 100%; /* Asegura que el menú ocupe todo el ancho */
+            width: 100%; 
         }
         .header_menu a {
             margin-left: 15px;
