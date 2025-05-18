@@ -27,7 +27,20 @@
         }
 
         .boton-flotante:hover {
-            background-color: #0056b3;
+            background-color: #27da8f;
+        }
+
+        /* Estilo para los botones superpuestos */
+        .boton-flotante-wrapper {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .boton-flotante-wrapper a {
+            display: block;
+            margin-bottom: 10px; /* Espacio entre los botones */
         }
     </style>
 </head>
@@ -107,12 +120,22 @@
         <p>Desarrollado por GrupoHogares</p>
     </footer>
 
-    <!-- Botón flotante de mensaje -->
-    <a href="https://docs.google.com/forms/d/1cMO0dX7vkM-kzsmDY4AarqnToxqJpTYEr7XKo67hmWo/edit?usp=drive_web" target="_blank">
-        <button class="boton-flotante">
-            <img src="imagenes/mensaje.png" alt="Encuesta de satisfaccion">
-        </button>
-    </a>
+    <!-- Botones flotantes superpuestos -->
+    <div class="boton-flotante-wrapper">
+        <!-- Botón de WhatsApp -->
+        <a href="https://wa.me/3015941969" target="_blank">
+            <button class="boton-flotante">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/WhatsApp_icon.png" alt="WhatsApp">
+            </button>
+        </a>
+
+        <!-- Botón de mensaje -->
+        <a href="https://docs.google.com/forms/d/1cMO0dX7vkM-kzsmDY4AarqnToxqJpTYEr7XKo67hmWo/edit?usp=drive_web" target="_blank">
+            <button class="boton-flotante">
+                <img src="imagenes/mensaje.png" alt="Encuesta de satisfaccion">
+            </button>
+        </a>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

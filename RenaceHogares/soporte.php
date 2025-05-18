@@ -11,10 +11,46 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
     <title>Soporte Técnico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .logo {
+            width: 100px; 
+            height: 120px;
+            margin-right: 20px; 
+        }
+        .header_menu {
+            display: flex;
+            justify-content: flex-start; /* Cambié esta propiedad para mover el menú a la izquierda */
+            align-items: center;
+            width: 100%; /* Asegura que el menú ocupe todo el ancho */
+        }
+        .header_menu a {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .header_menu {
+            margin-left: 10px; 
+        }
+    </style>
 </head>
 <body>
     <header class="header">
-        <nav class="header_menu d-flex justify-content-center align-items-center position-relative">
+        <!-- Logo en la parte izquierda -->
+        <div class="logo-container">
+            <img src="imagenes/logo1.jpg" alt="Logo" class="logo">
+        </div>
+
+        <!-- Menú de navegación -->
+        <nav class="header_menu d-flex justify-content-start align-items-center position-relative">
             <a class="header_enlaces mx-3" href="index.php">Inicio</a>
             <?php if ($usuario_nombre && (!isset($_SESSION['usuario_rol']) || $_SESSION['usuario_rol'] !== 'admin')): ?>
                 <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
