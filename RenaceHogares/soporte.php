@@ -38,7 +38,7 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
             align-items: center;
         }
         .header_menu {
-            margin-left: 10px; 
+            margin-left: 100px; 
         }
     </style>
 </head>
@@ -46,12 +46,13 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
     <header class="header">
         <!-- Logo en la parte izquierda -->
         <div class="logo-container">
-            <img src="imagenes/logo1.jpg" alt="Logo" class="logo">
+            <a class="header_enlaces mx-3" href="index.php">
+            <img src="imagenes/logo.png" alt="Logo" class="logo">
+            </a>
         </div>
 
         <!-- Menú de navegación -->
         <nav class="header_menu d-flex justify-content-start align-items-center position-relative">
-            <a class="header_enlaces mx-3" href="index.php">Inicio</a>
             <?php if ($usuario_nombre && (!isset($_SESSION['usuario_rol']) || $_SESSION['usuario_rol'] !== 'admin')): ?>
                 <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
             <?php endif; ?>
@@ -60,8 +61,6 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
             <?php endif; ?>
             <a class="header_enlaces mx-3" href="mapa.php">Mapa Interactivo</a>
             <a class="header_enlaces mx-3" href="soporte.php">Contacto y Soporte</a>
-            <a class="header_enlaces mx-3" href="informacion.php">Información</a>
-            <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
             <?php if ($usuario_nombre): ?>
                 <a class="header_enlaces mx-3" href="logout.php">Cerrar sesión</a>
             <?php else: ?>
@@ -99,6 +98,8 @@ $usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre
 
     <footer class="footer">
         <p>Desarrollado por GrupoHogares</p>
+        <a class="header_enlaces mx-3" href="informacion.php">Información</a>
+            <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

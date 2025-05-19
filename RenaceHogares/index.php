@@ -34,12 +34,46 @@ $usuario_rol = isset($_SESSION['usuario_rol']) ? $_SESSION['usuario_rol'] : null
         .boton-flotante:hover {
             background-color: #0056b3;
         }
+        .logo {
+            width: 100px; 
+            height: 120px;
+            margin-right: 20px; 
+        }
+        .header_menu {
+            display: flex;
+            justify-content: flex-start; 
+            align-items: center;
+            width: 100%; 
+        }
+        .header_menu a {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .header_menu {
+            margin-left: 100px; 
+        }
     </style>
 </head>
 <body>
     <header class="header">
+
+        <div class="logo-container">
+            <a class="header_enlaces mx-3" href="index.php">
+            <img src="imagenes/logo.png" alt="Logo" class="logo">
+            </a>
+        </div>
+
         <nav class="header_menu d-flex justify-content-center align-items-center position-relative">
-            <a class="header_enlaces mx-3" href="index.php">Inicio</a>
             <?php if ($usuario_nombre && $usuario_rol !== 'admin'): ?>
                 <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
             <?php endif; ?>
@@ -49,8 +83,6 @@ $usuario_rol = isset($_SESSION['usuario_rol']) ? $_SESSION['usuario_rol'] : null
             <a class="header_enlaces mx-3" href="mapa.php">Mapa Interactivo</a>
             <a class="header_enlaces mx-3" href="soporte.php">Contacto y Soporte</a>
             <?php if ($usuario_nombre): ?>
-                <a class="header_enlaces mx-3" href="informacion.php">Información</a>
-                <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
                 <a class="header_enlaces mx-3" href="logout.php">Cerrar sesión</a>
             <?php else: ?>
                 <a class="header_enlaces mx-3" href="sesion.php">Iniciar sesión</a>
@@ -126,6 +158,8 @@ $usuario_rol = isset($_SESSION['usuario_rol']) ? $_SESSION['usuario_rol'] : null
 
     <footer class="footer">
         <p>Desarrollado por GrupoHogares</p>
+        <a class="header_enlaces mx-3" href="informacion.php">Información</a>
+        <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
     </footer>
 
     <!-- Botón flotante de mensaje -->
