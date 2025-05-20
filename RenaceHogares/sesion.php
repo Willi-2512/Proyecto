@@ -46,23 +46,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Iniciar sesión</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
+     <style>
+        .logo {
+            width: 100px; 
+            height: 120px;
+            margin-right: 20px; 
+        }
+        .header_menu {
+            display: flex;
+            justify-content: flex-start; 
+            align-items: center;
+            width: 100%; 
+        }
+        .header_menu a {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .header_menu {
+            margin-left: 100px; 
+        }
+    </style>
 </head>
 <body>
     <header class="header">
+        <!-- Logo en la parte izquierda -->
+        <div class="logo-container">
+            <a class="header_enlaces mx-3" href="index.php">
+            <img src="imagenes/logo.png" alt="Logo" class="logo">
+            </a>
+        </div>
+
         <nav class="header_menu d-flex justify-content-center align-items-center position-relative">
-            <a class="header_enlaces mx-3" href="index.php">Inicio</a>
             <?php if (isset($_SESSION['usuario_nombre'])): ?>
                 <a class="header_enlaces mx-3" href="solicitud.php">Solicitud</a>
             <?php endif; ?>
             <a class="header_enlaces mx-3" href="mapa.php">Mapa Interactivo</a>
             <a class="header_enlaces mx-3" href="soporte.php">Contacto y Soporte</a>
             <?php if (isset($_SESSION['usuario_nombre'])): ?>
-                <a class="header_enlaces mx-3" href="informacion.php">Información</a>
                 <a class="header_enlaces mx-3" href="logout.php">Cerrar sesión</a>
             <?php else: ?>
                 <a class="header_enlaces mx-3" href="sesion.php">Iniciar sesión</a>
             <?php endif; ?>
-            <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
             <?php if (isset($_SESSION['usuario_nombre'])): ?>
                 <span class="fw-bold text-primary position-absolute end-0 me-4">
                     <?php echo htmlspecialchars($_SESSION['usuario_nombre']); ?>
@@ -100,6 +134,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <footer class="footer">
         <p>Desarrollado por GrupoHogares</p>
+        <a class="header_enlaces mx-3" href="informacion.php">Información</a>
+            <a class="header_enlaces mx-3" href="condiciones.php">Términos y condiciones</a>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
